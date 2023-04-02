@@ -20,7 +20,9 @@ public class HelloController {
     @FXML
     private TextArea tAReadFile, tAWritesomething;
     @FXML
-    private File file ;
+    private File file=null;
+    @FXML
+    File files =null;
     @FXML
     private FileWriter fileWriter;
 
@@ -36,45 +38,39 @@ public class HelloController {
         fileReader(file);
     }
 
-    public void makeFile(String folderName, String fileName) {
+    public void makeFile(String folderName, String fileName) throws IOException {
 
-        try {
-            file = new File(revCreateDirectory(folderName) + "\\" + fileName);
-            path = revCreateDirectory(folderName) + "\\" + fileName;
-            if (file.createNewFile()) {
-                welcomeText.setText("File created: " + file.getName());
-                System.out.println("File created: " + file.getName());
-            } else {
-                System.out.println("File already exists.");
+
+
+            try {
+                file = new File(revCreateDirectory(folderName) + "\\" + fileName);
+                file.createNewFile();
+                path = revCreateDirectory(folderName) + "\\" + fileName;
+
+                    welcomeText.setText("File created: " + file.getName());
+                    System.out.println("File created: " + file.getName());
+
+                    System.out.println("File already exists.");
+                } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        tAReadFile.setText("");
+            tAReadFile.setText("");
+
     }
 
-    public String revCreateDirectory(String pathName) {
-        String path = "";
-        //To create single directory/folder
-        /*File file = new File("C:\\Users\\Deneme\\file.txt");
-        if (!file.exists()) {
-            if (file.mkdir()) {
-                System.out.println("Directory is created!");
-            } else {
-                System.out.println("Failed to create directory!");
-            }
-        }*/
-        //To create multiple directories/folders
-        File files = new File("C:\\Users\\Public\\Documents\\" + pathName);
-        if (!files.exists()) {
+
+    public String revCreateDirectory(String pathName) throws IOException {
+        String path = "C:\\Users\\Public\\Documents\\" + pathName;
+        files = new File("C:\\Users\\Public\\Documents\\" + pathName);
+
             if (files.mkdirs()) {
                 System.out.println("Multiple directories are created!");
                 path = "C:\\Users\\Public\\Documents\\" + pathName;
             } else {
                 System.out.println("Failed to create multiple directories!");
             }
-        }
+
         return path;
     }
 
@@ -86,7 +82,7 @@ public class HelloController {
         try {
             String line;
             while ((line = br.readLine()) != null) {
-                text += line+"\n";
+                text += line + "\n";
                 tAReadFile.setText(text);
             }
         } finally {
@@ -97,7 +93,7 @@ public class HelloController {
 
     @FXML
     public void writeSometihngs(String filePath, String text) throws IOException {
-        fileWriter = new FileWriter(file, true);
+        fileWriter = new FileWriter(file, false);
 
         fileWriter.write(text);
 
